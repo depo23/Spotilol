@@ -9,12 +9,12 @@
     <img src="https://img.shields.io/github/stars/lyssadev/Spotilol?style=for-the-badge&logo=starship&labelColor=0d0d0d&color=1DB954" alt="stars"/>
   </a>
   &nbsp;
-  <a href="https://github.com/lyssadev/Spotilol/releases">
-    <img src="https://img.shields.io/github/downloads/lyssadev/Spotilol/total?style=for-the-badge&logo=download&labelColor=0d0d0d&color=1DB954" alt="downloads"/>
+  <a href="https://github.com/depo23/Spotilol/releases">
+    <img src="https://img.shields.io/github/downloads/depo23/Spotilol/total?style=for-the-badge&logo=download&labelColor=0d0d0d&color=1DB954" alt="downloads"/>
   </a>
   &nbsp;
-  <a href="https://github.com/lyssadev/Spotilol/releases/latest">
-    <img src="https://img.shields.io/github/v/release/lyssadev/Spotilol?style=for-the-badge&logo=github&labelColor=0d0d0d&color=1DB954" alt="version"/>
+  <a href="https://github.com/depo23/Spotilol/releases/latest">
+    <img src="https://img.shields.io/github/v/release/depo23/Spotilol?style=for-the-badge&logo=github&labelColor=0d0d0d&color=1DB954" alt="version"/>
   </a>
   &nbsp;
   <a href="https://github.com/lyssadev/Spotilol/forks">
@@ -45,12 +45,14 @@
 ## Download
 
 <div align="center">
-  <a href="https://github.com/lyssadev/Spotilol/releases/latest">
-    <img src="https://img.shields.io/github/v/release/lyssadev/Spotilol?style=for-the-badge&logo=github&labelColor=0d0d0d&color=1DB954" alt="Download APK"/>
+  <a href="https://github.com/depo23/Spotilol/releases/latest">
+    <img src="https://img.shields.io/github/v/release/depo23/Spotilol?style=for-the-badge&logo=github&labelColor=0d0d0d&color=1DB954" alt="Download APK"/>
   </a>
 </div>
 
 download the `.apk` and install it on your device. you may need to toggle **"Install from unknown sources"** in your Settings.
+
+> this fork's releases are signed with a different key than [upstream](https://github.com/lyssadev/Spotilol/releases). if you have the upstream app installed, uninstall it first.
 
 ---
 
