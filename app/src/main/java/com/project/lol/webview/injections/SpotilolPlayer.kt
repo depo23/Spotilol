@@ -133,10 +133,10 @@ object SpotilolPlayer {
                     var fst=document.createElement('style');fst.id='spl-full-css';
                     fst.textContent=[
                         '#spotilolPlayerControls .spl-np-head{display:none}',
-                        '#spotilolPlayerControls.spl-mini{background:var(--spl-np-mini,rgba(24,24,24,.95))!important;transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .3s,padding .3s,background-color .4s}',
-                        '#spotilolPlayerControls.spl-mini .spl-cover img{width:44px!important;height:44px!important;border-radius:6px!important;-webkit-mask-image:none!important;mask-image:none!important}',
-                        '#spotilolPlayerControls.spl-mini .spl-edgebar{left:10px;right:10px;bottom:4px;height:2px;border-radius:1px;background:rgba(255,255,255,.2)}',
-                        '#spotilolPlayerControls.spl-mini .spl-edgebar .spl-fill{background:#fff}',
+                        '#spotilolPlayerControls.spl-fsmode.spl-mini{background:var(--spl-np-mini,rgba(24,24,24,.95))!important;transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .3s,padding .3s,background-color .4s}',
+                        '#spotilolPlayerControls.spl-fsmode.spl-mini .spl-cover img{width:44px!important;height:44px!important;border-radius:6px!important;-webkit-mask-image:none!important;mask-image:none!important}',
+                        '#spotilolPlayerControls.spl-fsmode.spl-mini .spl-edgebar{left:10px;right:10px;bottom:4px;height:2px;border-radius:1px;background:rgba(255,255,255,.2)}',
+                        '#spotilolPlayerControls.spl-fsmode.spl-mini .spl-edgebar .spl-fill{background:#fff}',
                         '#spotilolPlayerControls.spl-full{position:fixed!important;top:0!important;bottom:0!important;left:0!important;right:0!important;max-width:none!important;margin:0!important;border:none!important;border-radius:0!important;box-shadow:none!important;padding:0 24px 28px!important;overflow:hidden!important;background:linear-gradient(180deg,var(--spl-np-color,#404040) 0%,#121212 78%)!important;font-family:var(--encore-body-font-stack,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif);animation:splNpIn .32s cubic-bezier(.2,.8,.2,1)}',
                         '@keyframes splNpIn{from{transform:translateY(100%)}to{transform:none}}',
                         '#spotilolPlayerControls.spl-full .spl-np-head{display:flex;align-items:center;justify-content:space-between;order:0;height:64px;flex-shrink:0;margin:0 -12px}',
@@ -195,8 +195,8 @@ object SpotilolPlayer {
                 document.getElementById('spl-play-mini').onclick=function(){var st=window.splIsPlaying();actPlayPause(st===null?null:!st)};
                 document.getElementById('spl-shuffle').onclick=function(){var sb=splFindShuffle();if(sb&&sb.getAttribute('aria-disabled')!=='true')sb.click()};
                 document.getElementById('spl-repeat').onclick=function(){actRepeat()};
-                document.getElementById('spl-lyrics').onclick=function(){if(this.classList.contains('spl-disabled'))return;splSetMini(true);if(typeof closeNowPlay==='function') closeNowPlay();var lb=document.querySelector('button[data-testid=lyrics-button]');if(lb&&!lb.disabled)lb.click()};
-                document.getElementById('spl-queue').onclick=function(){splSetMini(true);var qb=document.querySelector('button[data-testid=control-button-queue]');if(qb)qb.click()};
+                document.getElementById('spl-lyrics').onclick=function(){if(this.classList.contains('spl-disabled'))return;splCollapseFull();if(typeof closeNowPlay==='function') closeNowPlay();var lb=document.querySelector('button[data-testid=lyrics-button]');if(lb&&!lb.disabled)lb.click()};
+                document.getElementById('spl-queue').onclick=function(){splCollapseFull();var qb=document.querySelector('button[data-testid=control-button-queue]');if(qb)qb.click()};
                 document.getElementById('spl-vol-btn').onclick=function(){var vb=document.querySelector('button[data-testid=volume-bar-toggle-mute-button]');if(vb)vb.click()};
                 (function(){
                     var vBar=document.getElementById('spl-vol-bar');
@@ -222,7 +222,7 @@ object SpotilolPlayer {
                     document.addEventListener('touchend',function(){vDrag=false;});
                     document.addEventListener('touchcancel',function(){vDrag=false;});
                 })();
-                document.getElementById('spl-nptoggle').onclick=function(){splSetMini(true);clickNP()};
+                document.getElementById('spl-nptoggle').onclick=function(){splCollapseFull();clickNP()};
                 document.getElementById('spl-collapse').onclick=function(){splSetMini(true)};
                 document.getElementById('spl-timer').onclick=function(){AndBridge.openTimerDialog()};
                 document.getElementById('spl-pip').onclick=function(){
@@ -372,14 +372,14 @@ object SpotilolPlayer {
                 splArtist.style.cursor='pointer';
                 splTrack.onclick=function(){
                     if(pl.classList.contains('spl-mini'))return;
-                    splSetMini(true);
+                    splCollapseFull();
                     if(typeof closeNowPlay==='function') closeNowPlay();
                     var rl=document.querySelector('a[data-testid=context-item-link]');
                     if(rl){rl.click();}
                 };
                 splArtist.onclick=function(){
                     if(pl.classList.contains('spl-mini'))return;
-                    splSetMini(true);
+                    splCollapseFull();
                     if(typeof closeNowPlay==='function') closeNowPlay();
                     var al=document.querySelector('a[data-testid=context-item-info-artist]');
                     if(!al) al=document.querySelector('a[data-testid=context-item-info-show]');
@@ -399,14 +399,21 @@ object SpotilolPlayer {
 
                 var splMini=false,splClosing=false;
                 var splDrag=null,splSuppressClick=false,splLastDragEnd=0;
+                // window.__splFullPlayer: true = mini bar / full screen ("fullscreen" mode),
+                // false = mini bar / floating card ("spotilol" mode).
                 function splApplyMode(m){
-                    var changed=splMini!==m||!pl.classList.contains(m?'spl-mini':'spl-full');
+                    var fs=!!window.__splFullPlayer;
+                    var wasFull=pl.classList.contains('spl-full');
                     splMini=m;
                     window.splMiniPref=splMini;
+                    pl.classList.toggle('spl-fsmode',fs);
                     pl.classList.toggle('spl-mini',splMini);
-                    pl.classList.toggle('spl-full',!splMini);
-                    if(changed){ try{ AndBridge.playerExpanded(!splMini); }catch(e){} }
+                    pl.classList.toggle('spl-full',fs&&!splMini);
+                    var isFull=fs&&!splMini;
+                    if(isFull!==wasFull){ try{ AndBridge.playerExpanded(isFull); }catch(e){} }
                 }
+                function splCollapseFull(){ if(pl.classList.contains('spl-full')) splSetMini(true); }
+                window.splRefreshMode=function(){ splApplyMode(window.__splFullPlayer?true:splMini); };
                 // Collapsing slides the full-screen player down before switching to the mini bar.
                 function splSetMini(m){
                     m=!!m;
@@ -447,7 +454,7 @@ object SpotilolPlayer {
                     if(!splDrag)return;
                     var d=splDrag;
                     splDrag=null;
-                    var collapse=d.moving&&!d.mini&&d.dy>70;
+                    var collapse=d.moving&&!d.mini&&d.dy>70&&pl.classList.contains('spl-full');
                     pl.style.transition='';
                     if(!collapse) pl.style.transform='';
                     pl.style.opacity='';
@@ -456,7 +463,7 @@ object SpotilolPlayer {
                         splLastDragEnd=Date.now();
                         setTimeout(function(){splSuppressClick=false;},100);
                         if(d.mini){if(d.dy<-70)splSetMini(false);}
-                        else if(collapse) splSetMini(true);
+                        else if(collapse||d.dy>70) splSetMini(true);
                     }
                 }
                 pl.addEventListener('touchstart',function(e){if(e.target.closest('#spl-bar')||e.target.closest('#spl-edgebar')||e.target.closest('.spl-vol-bar'))return;var t=e.touches[0];splDragStart(t.clientX,t.clientY);},{passive:true});
@@ -619,7 +626,7 @@ object SpotilolPlayer {
                         if(timestamp-rafLastTime>100){ splUpdate(); rafLastTime=timestamp; }
                         requestAnimationFrame(rafUpdate);
                     }
-                    splSetMini(true);
+                    splSetMini(window.__splFullPlayer?true:!!window.splMiniPref);
                     requestAnimationFrame(rafUpdate);
             };
             if(document.readyState==='complete') initSpotilolPlayer();

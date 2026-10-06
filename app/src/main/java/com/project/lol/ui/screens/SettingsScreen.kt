@@ -522,6 +522,7 @@ fun SettingsContent(
                     val playerModeLabel = when (playerMode) {
                         "spotilol" -> stringResource(R.string.settings_player_spotilol)
                         "original" -> stringResource(R.string.settings_player_original)
+                        "fullscreen" -> stringResource(R.string.settings_player_fullscreen)
                         else -> stringResource(R.string.settings_player_spotilol)
                     }
                     SettingTile(
@@ -1047,7 +1048,8 @@ fun SettingsContent(
             title = stringResource(R.string.settings_player_mode),
             options = listOf(
                 "spotilol" to stringResource(R.string.settings_player_spotilol),
-                "original" to stringResource(R.string.settings_player_original)
+                "original" to stringResource(R.string.settings_player_original),
+                "fullscreen" to stringResource(R.string.settings_player_fullscreen)
             ),
             selected = playerMode,
             onSelect = { value ->
