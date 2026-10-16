@@ -26,6 +26,9 @@ android {
         targetSdk = 36
         versionCode = 23
         versionName = "1.2.4"
+        // GitHub repo (owner/name) that update checks read releases from. Forks that sign
+        // their own builds can point it at their releases with -PupdateRepo=owner/name.
+        buildConfigField("String", "UPDATE_REPO", "\"${project.findProperty("updateRepo") ?: "lyssadev/Spotilol"}\"")
         ndk {
             abiFilters += listOf("arm64-v8a", "armeabi-v7a")
         }
